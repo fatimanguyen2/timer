@@ -1,24 +1,16 @@
-// user press 'b' for immediate beep
-//press 1-9 --> output 'setting timer for x seconds' AND beep after x secs
-//ctrl+c to exit program and program prints 'Thanks for using me, ciao!'
-const readline = require('readline');
+const stdin = process.stdin;
 
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout
-});
+stdin.setRawMode(true);
+stdin.setEncoding('utf8');
 
-rl.on('SIGINT', () => {
-  console.log('Thanks for using me, ciao!');
-  rl.close();
-});
-
-rl.on('line', (userInput) => {
-  if (userInput === 'b') {
+stdin.on('data', (key) => {
+  if (key === 'b') {
     process.stdout.write('\x07');
-
-  } else if (Number.isInteger(parseInt(userInput))) {
-    console.log(`Setting timer for ${userInput} seconds...`);
-    setTimeout(() => process.stdout.write('\x07'), userInput * 1000);
-  } 
-});
+  } else if (Number(key) < 10 & Number(key) >=0) {
+    process.stdout.write(`setting timer for ${key} seconds...\n` );
+    setTimeout(() => process.stdout.write('\x07'), key * 1000);
+  } else if (key === '\u0003') {
+    process.stdout.write('Thanks for using me, ciao!\n' );
+    process.exit();
+  }
+})
